@@ -25,7 +25,7 @@
       </div>
     </div>
     <div class="h-full flex-1">
-      content
+       <ProviderSelect />
     </div>
   </div>
 </template>
@@ -34,6 +34,7 @@
 import {Icon} from '@iconify/vue';
 import { ConversationProps } from 'src/type';
 import ConversationList from './components/ConversationList.vue';
+import ProviderSelect from './components/ProviderSelect.vue';
 const items:ConversationProps[]=[
   { id: 1, selectedModel: 'GPT-3.5-Turbo', title: '什么是光合作用1', createdAt: '2024-07-03', updatedAt: '2024-07-03', providerId: 1},
   { id: 2, selectedModel: 'GPT-3.5-Turbo', title: '什么是光合作用', createdAt: '2024-07-03', updatedAt: '2024-07-03', providerId: 1},
