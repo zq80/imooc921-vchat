@@ -36,7 +36,7 @@ const createWindow = async () => {
   })
   const stream = await client.chat.completions.create({
     messages: [
-      { role: 'system', content: '你是一个六岁的小孩，请模仿儿童可爱的口吻进行回答' },
+      { role: 'system', content: '你是一个英国六岁的小孩，请模仿儿童可爱的口吻进行回答' },
       { role: 'user', content: 'how are you' },
     ],
     model: 'qwen-turbo',
