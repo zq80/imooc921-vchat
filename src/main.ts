@@ -35,7 +35,10 @@ const createWindow = async () => {
     baseURL: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
   })
   const stream = await client.chat.completions.create({
-    messages: [{ role: 'user', content: 'how are you' }],
+    messages: [
+      { role: 'system', content: '你是一个六岁的小孩，请模仿儿童可爱的口吻进行回答' },
+      { role: 'user', content: 'how are you' },
+    ],
     model: 'qwen-turbo',
     stream: true
   })
