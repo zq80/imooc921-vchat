@@ -29,7 +29,7 @@
       </div>
     </div>
     <div class="h-full flex-1 ">
-      <Button color="purple" plain>hello there</Button>
+      <Button color="purple" plain size="large"  icon-name="radix-icons:gear">hello there</Button>
          <RouterView/>
     </div>
   </div>
