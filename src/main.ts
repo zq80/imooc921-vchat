@@ -34,11 +34,14 @@ const createWindow = async () => {
     apiKey: process.env['ALI_API_KEY'],
     baseURL: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
   })
-  const resp = await client.chat.completions.create({
+  const stream = await client.chat.completions.create({
     messages: [{ role: 'user', content: 'how are you' }],
     model: 'qwen-turbo',
+    stream: true
   })
-  console.log('resp', resp.choices[0].message)
+  for await (const chunk of stream) {
+    console.log(chunk.choices[0].delta)
+  }
   // const client = new ChatCompletion()
   // const resp = await client.chat({
   //   messages: [
