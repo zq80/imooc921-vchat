@@ -2,6 +2,8 @@ import { app, BrowserWindow } from 'electron';
 import { ChatCompletion } from '@baiducloud/qianfan';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
+import 'dotenv/config'
+import OpenAI from 'openai';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
@@ -27,13 +29,23 @@ const createWindow = async () => {
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools();
-  const client = new ChatCompletion()
-  const resp = await client.chat({
-    messages: [
-      { role: 'user', content: 'how are you' }
-    ]
-  }, 'ERNIE-Speed-128K')
-  console.log(resp)
+
+  const client = new OpenAI({
+    apiKey: process.env['ALI_API_KEY'],
+    baseURL: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
+  })
+  const resp = await client.chat.completions.create({
+    messages: [{ role: 'user', content: 'how are you' }],
+    model: 'qwen-turbo',
+  })
+  console.log('resp', resp.choices[0].message)
+  // const client = new ChatCompletion()
+  // const resp = await client.chat({
+  //   messages: [
+  //     { role: 'user', content: 'how are you' }
+  //   ]
+  // }, 'ERNIE-Speed-128K')
+  // console.log(resp)
 };
 
 // This method will be called when Electron has finished
