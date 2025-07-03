@@ -4,6 +4,7 @@ import path from 'node:path';
 import started from 'electron-squirrel-startup';
 import 'dotenv/config'
 import OpenAI from 'openai';
+import fs from 'fs/promises'
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
@@ -34,17 +35,31 @@ const createWindow = async () => {
     apiKey: process.env['ALI_API_KEY'],
     baseURL: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
   })
-  const stream = await client.chat.completions.create({
-    messages: [
-      { role: 'system', content: '你是一个英国六岁的小孩，请模仿儿童可爱的口吻进行回答' },
-      { role: 'user', content: 'how are you' },
-    ],
-    model: 'qwen-turbo',
-    stream: true
+  const imageBuffer = await fs.readFile("C:/Users/50618/Downloads/dog_and_girl.jpeg")
+  const base64Image = imageBuffer.toString('base64')
+  const resp = await client.chat.completions.create({
+    messages: [{
+      role: 'user',
+      content: [
+        { type: 'text', text: '图中是什么品种的狗，请用英文回答' },
+        { type: 'image_url', image_url: { url: `data:image/jpeg;base64,${base64Image}` } }
+      ]
+    }],
+    model: 'qwen-vl-plus'
   })
-  for await (const chunk of stream) {
-    console.log(chunk.choices[0].delta)
-  }
+  console.log('resp', resp.choices[0].message)
+
+  // const stream = await client.chat.completions.create({
+  //   messages: [
+  //     { role: 'system', content: '你是一个英国六岁的小孩，请模仿儿童可爱的口吻进行回答' },
+  //     { role: 'user', content: 'how are you' },
+  //   ],
+  //   model: 'qwen-turbo',
+  //   stream: true
+  // })
+  // for await (const chunk of stream) {
+  //   console.log(chunk.choices[0].delta)
+  // }
   // const client = new ChatCompletion()
   // const resp = await client.chat({
   //   messages: [
