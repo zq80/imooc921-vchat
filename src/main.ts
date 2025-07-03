@@ -31,23 +31,23 @@ const createWindow = async () => {
   // Open the DevTools.
   // mainWindow.webContents.openDevTools();
 
-  const client = new OpenAI({
-    apiKey: process.env['ALI_API_KEY'],
-    baseURL: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
-  })
-  const imageBuffer = await fs.readFile("C:/Users/50618/Downloads/dog_and_girl.jpeg")
-  const base64Image = imageBuffer.toString('base64')
-  const resp = await client.chat.completions.create({
-    messages: [{
-      role: 'user',
-      content: [
-        { type: 'text', text: '图中是什么品种的狗，请用英文回答' },
-        { type: 'image_url', image_url: { url: `data:image/jpeg;base64,${base64Image}` } }
-      ]
-    }],
-    model: 'qwen-vl-plus'
-  })
-  console.log('resp', resp.choices[0].message)
+  // const client = new OpenAI({
+  //   apiKey: process.env['ALI_API_KEY'],
+  //   baseURL: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
+  // })
+  // const imageBuffer = await fs.readFile("C:/Users/50618/Downloads/dog_and_girl.jpeg")
+  // const base64Image = imageBuffer.toString('base64')
+  // const resp = await client.chat.completions.create({
+  //   messages: [{
+  //     role: 'user',
+  //     content: [
+  //       { type: 'text', text: '图中是什么品种的狗，请用英文回答' },
+  //       { type: 'image_url', image_url: { url: `data:image/jpeg;base64,${base64Image}` } }
+  //     ]
+  //   }],
+  //   model: 'qwen-vl-plus'
+  // })
+  // console.log('resp', resp.choices[0].message)
 
   // const stream = await client.chat.completions.create({
   //   messages: [

@@ -38,7 +38,20 @@
 <script lang="ts" setup>
 import {Icon} from '@iconify/vue';
 import ConversationList from './components/ConversationList.vue';
-import { conversations } from './testData';
+import { conversations, providers } from './testData';
 import Button from './components/Button.vue';
+import { onMounted } from 'vue';
+import { db } from './db';
 const items = conversations
+
+onMounted(async()=>{
+  // const insertedId=await db.providers.add(providers[0])
+  // console.log('insertedId',insertedId)
+  const items=await db.providers.where({id:1}).toArray()
+  console.log('items',items)
+  const updateItem=await db.providers.update(1,{desc:'updated desc'})
+  console.log('updatedItem',updateItem)
+  const deletedItem=await db.providers.delete(1)
+  console.log('deletedItem',deletedItem)
+})
 </script>
