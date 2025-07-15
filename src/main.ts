@@ -22,8 +22,29 @@ const createWindow = async () => {
     },
   });
 
-  ipcMain.on('start-chat', async (event, Content: CreateChatProps) => {
-    console.log('hey', Content)
+  ipcMain.on('start-chat', async (event, data: CreateChatProps) => {
+    console.log('hey', data)
+    const { providerName, content, messageId, selectedModel } = data
+    if (providerName === 'qianfan') {
+      const client = new ChatCompletion()
+      const stream = await client.chat({
+        messages: [
+          { role: 'user', content }
+        ],
+        stream: true
+      }, selectedModel)
+      for await (const chunk of stream) {
+        const { is_end, result } = chunk
+        const content = {
+          messageId,
+          data: {
+            is_end,
+            result
+          }
+        }
+        mainWindow.webContents.send('update-message', content)
+      }
+    }
   })
 
   // and load the index.html of the app.
