@@ -16,7 +16,7 @@ import { useRoute } from 'vue-router';
 import MessageInput from '../components/MessageInput.vue'
 import MessageList from '../components/MessageList.vue';
 // import { messages,conversations } from '../testData';
-import { MessageProps,ConversationProps } from '../type';
+import { MessageProps,ConversationProps, MessageStatus } from '../type';
 import { db } from '../db';
 const route=useRoute()
 const filteredMessages=ref<MessageProps[]>([])
@@ -61,8 +61,22 @@ onMounted(async ()=>{
     lastQuestion=lastMessage?.content||''
     await creatingInitialMessage()
   }
-  window.electronAPI.onUpdateMessage((streamData)=>{
+  window.electronAPI.onUpdateMessage(async (streamData)=>{
     console.log('stream',streamData)
+    const {messageId,data}=streamData
+    const currentMessage=await db.messages.where({id:messageId}).first()
+    if(currentMessage){
+      const updatedData={
+        content:currentMessage.content+data.result,
+        status:data.is_end?'finished':'streaming' as MessageStatus,
+        updatedAt:new Date().toISOString()
+      }
+      await db.messages.update(messageId,updatedData)
+      const index=filteredMessages.value.findIndex(item=>item.id=== messageId)
+      if(index!==-1){
+        filteredMessages.value[index]={...filteredMessages.value[index],...updatedData}
+      }
+    }
   })
 })
 </script>
