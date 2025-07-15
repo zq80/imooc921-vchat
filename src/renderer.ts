@@ -31,6 +31,7 @@ import './index.css';
 // console.log('👋 This message is being logged by "renderer.ts", included via Vite');
 
 import { createApp } from 'vue';
+import { createPinia } from 'pinia';
 import App from './App.vue';
 import { createRouter, createMemoryHistory } from 'vue-router';
 import Home from './views/Home.vue';
@@ -46,5 +47,6 @@ const router = createRouter({
     history: createMemoryHistory(),
     routes
 })
+const pinia = createPinia()
 
-createApp(App).use(router).mount('#app');
+createApp(App).use(router).use(pinia).mount('#app');

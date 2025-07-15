@@ -2,7 +2,7 @@
   <div class=" flex items-center justify-between h-screen">
     <div class=" w-[300px] bg-gray-200 h-full border-r border-gray-300">
       <div class="h-[90%] overflow-y-auto">
-        <ConversationList :items="conversations"/>
+        <ConversationList :items="items"/>
       </div>
       <div class="h-[10%] grid grid-cols-2 gap-2 p-2">
         <RouterLink to="/">
@@ -26,6 +26,12 @@
             应用设置
           </button>
         </RouterLink>
+        <Button icon-name="radix-icons:chat-bubble" class="w-full" @click="testAdd">
+          ADD
+        </Button>
+        <Button icon-name="radix-icons:chat-bubble" class="w-full" @click="testReset">
+          reset
+        </Button>
       </div>
     </div>
     <div class="h-full flex-1 ">
@@ -37,13 +43,17 @@
 <script lang="ts" setup>
 import {Icon} from '@iconify/vue';
 import ConversationList from './components/ConversationList.vue';
+import { useConversationStore } from './stores/conversation';
 import Button from './components/Button.vue';
-import { onMounted,ref } from 'vue';
+import { computed, onMounted,ref } from 'vue';
 import { db,initProviders } from './db';
 import { ConversationProps } from './type';
+import { conversations } from './testData';
 // const items = conversations
-const conversations =ref<ConversationProps[]>([])
 
+let index=0
+const conversationStore=useConversationStore()
+const items=computed(()=>conversationStore.items)
 onMounted(async()=>{
   // const insertedId=await db.providers.add(providers[0])
   // console.log('insertedId',insertedId)
@@ -54,6 +64,13 @@ onMounted(async()=>{
   // const deletedItem=await db.providers.delete(1)
   // console.log('deletedItem',deletedItem)
   await initProviders()
-  conversations.value=await db.conversations.toArray()
+  conversationStore.items=await db.conversations.toArray()
 })
+const testAdd=()=>{
+  index++
+  conversationStore.items.push(conversations[index])
+}
+const testReset=()=>{
+  conversationStore.$reset()
+}
 </script>
