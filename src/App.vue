@@ -3,6 +3,7 @@
     <div class=" w-[300px] bg-gray-200 h-full border-r border-gray-300">
       <div class="h-[90%] overflow-y-auto">
         <ConversationList :items="items"/>
+        <h3>{{ conversationStore.totalNumber }}</h3>
       </div>
       <div class="h-[10%] grid grid-cols-2 gap-2 p-2">
         <RouterLink to="/">
@@ -26,12 +27,6 @@
             应用设置
           </button>
         </RouterLink>
-        <Button icon-name="radix-icons:chat-bubble" class="w-full" @click="testAdd">
-          ADD
-        </Button>
-        <Button icon-name="radix-icons:chat-bubble" class="w-full" @click="testReset">
-          reset
-        </Button>
       </div>
     </div>
     <div class="h-full flex-1 ">
@@ -51,7 +46,6 @@ import { ConversationProps } from './type';
 import { conversations } from './testData';
 // const items = conversations
 
-let index=0
 const conversationStore=useConversationStore()
 const items=computed(()=>conversationStore.items)
 onMounted(async()=>{
@@ -64,13 +58,6 @@ onMounted(async()=>{
   // const deletedItem=await db.providers.delete(1)
   // console.log('deletedItem',deletedItem)
   await initProviders()
-  conversationStore.items=await db.conversations.toArray()
+  conversationStore.fetchConversations()
 })
-const testAdd=()=>{
-  index++
-  conversationStore.items.push(conversations[index])
-}
-const testReset=()=>{
-  conversationStore.$reset()
-}
 </script>
