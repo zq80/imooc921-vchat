@@ -6,6 +6,7 @@ import 'dotenv/config'
 import OpenAI from 'openai';
 import fs from 'fs/promises'
 import { Content } from 'openai/resources/containers/files/content';
+import { CreateChatProps } from './type';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
@@ -24,13 +25,11 @@ const createWindow = async () => {
 
   ipcMain.on('start-chat', async (event, data: CreateChatProps) => {
     console.log('hey', data)
-    const { providerName, content, messageId, selectedModel } = data
+    const { providerName, messages, messageId, selectedModel } = data
     if (providerName === 'qianfan') {
       const client = new ChatCompletion()
       const stream = await client.chat({
-        messages: [
-          { role: 'user', content }
-        ],
+        messages: messages as any,
         stream: true
       }, selectedModel)
       for await (const chunk of stream) {
