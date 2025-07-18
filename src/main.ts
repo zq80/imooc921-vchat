@@ -24,8 +24,8 @@ const createWindow = async () => {
   });
 
   ipcMain.on('start-chat', async (event, data: CreateChatProps) => {
-    console.log('hey', data)
     const { providerName, messages, messageId, selectedModel } = data
+    console.log('hey', providerName)
     if (providerName === 'qianfan') {
       const client = new ChatCompletion()
       const stream = await client.chat({
@@ -39,6 +39,28 @@ const createWindow = async () => {
           data: {
             is_end,
             result
+          }
+        }
+        mainWindow.webContents.send('update-message', content)
+      }
+    } else if (providerName === 'dashscope') {
+      console.log('dashscope', data)
+      const client = new OpenAI({
+        apiKey: process.env['ALI_API_KEY'],
+        baseURL: 'https://dashscope.aliyuncs.com/compatible-mode/v1'
+      })
+      const stream = await client.chat.completions.create({
+        messages: messages as any,
+        model: selectedModel,
+        stream: true
+      })
+      for await (const chunk of stream) {
+        const choice = chunk.choices[0]
+        const content = {
+          messageId,
+          data: {
+            is_end: choice.finish_reason === 'stop',
+            result: choice.delta.content || ''
           }
         }
         mainWindow.webContents.send('update-message', content)
