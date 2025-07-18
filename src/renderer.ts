@@ -37,6 +37,7 @@ import { createRouter, createMemoryHistory } from 'vue-router';
 import Home from './views/Home.vue';
 import Conversation from './views/Conversation.vue';
 import Settings from './views/Settings.vue';
+import { useConversationStore } from './stores/conversation';
 
 const routes = [
     { path: '/', component: Home },
@@ -46,6 +47,12 @@ const routes = [
 const router = createRouter({
     history: createMemoryHistory(),
     routes
+})
+router.beforeEach((to, from) => {
+    const store = useConversationStore()
+    if (!to.path.startsWith('/conversation/')) {
+        store.selectedId = -1
+    }
 })
 const pinia = createPinia()
 
